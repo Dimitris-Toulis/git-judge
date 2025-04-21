@@ -1,0 +1,37 @@
+GEM
+  remote: https://rubygems.org/
+  specs:
+    cgi (0.4.2)
+    charlock_holmes (0.7.9)
+    faraday (2.13.0)
+      faraday-net_http (>= 2.0, < 3.5)
+      json
+      logger
+    faraday-net_http (3.4.0)
+      net-http (>= 0.5.0)
+    github-linguist (9.1.0)
+      cgi
+      charlock_holmes (~> 0.7.7)
+      mini_mime (~> 1.0)
+      rugged (~> 1.0)
+    json (2.10.2)
+    logger (1.7.0)
+    mini_mime (1.1.5)
+    net-http (0.6.0)
+      uri
+    rainbow (3.1.1)
+    rugged (1.9.0)
+    uri (1.0.3)
+
+PLATFORMS
+  ruby
+  x86_64-linux
+
+DEPENDENCIES
+  faraday
+  github-linguist
+  rainbow
+  rugged
+
+BUNDLED WITH
+   2.6.7
