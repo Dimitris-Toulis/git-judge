@@ -85,10 +85,16 @@ walker.each { |commit|
   diff = parent_tree.diff(commit.tree, { :paths => files_to_diff, :disable_pathspec_match => true }).patch
   response = conn.post("/chat/completions", {
     "messages" => [
-      { "role" => "system", "content" => prompt + " Do not output anything else!" },
-      { "role" => "user", "content" => "#{commit.message}\n#{diff}" },
+      { "role" => "system", "content" =>"You judge commits with the specified style. Do not output markdown, output only plain text!" },
+      { "role" => "user", "content" =>  prompt + " Do not output anything else!\n#{commit.message}\n#{diff}" },
     ],
-  }.to_json)
+  }.to_json).body["choices"][0]["message"]["content"]
+
+  if response.include? "<think>"
+    response = response.split("</think>")[1]
+  end
+  response.strip!
+  response = response.delete_prefix('"').delete_suffix('"')
 
   # Wait for space
   if !first && $stdin.getch != " "
@@ -101,7 +107,7 @@ walker.each { |commit|
 
   puts "\bcommit #{commit.oid[0, 7]} #{Rainbow("by #{commit.author[:name]}").blue}"
   puts Rainbow(commit.message.lines[0]).cyan.bright
-  puts "	#{Rainbow(response.body["choices"][0]["message"]["content"].delete_prefix('"').delete_suffix('"')).red.bright}\n\n"
+  puts "#{Rainbow(response).red.bright}\n\n"
 
   # Stop at end of range
   if options[:range] != nil && commit.oid == range[0]
